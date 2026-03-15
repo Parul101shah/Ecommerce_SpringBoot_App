@@ -21,6 +21,8 @@ Spring Boot automatically:
 3.Converts returned objects into JSON response.
 */
 @RestController
+//Use case of request mapping in class level
+@RequestMapping("/api")
 public class CategoryController {
     //need object of CategoryService
     @Autowired //(Field Injection)
@@ -33,22 +35,27 @@ public class CategoryController {
 //    }
 
     //This maps an HTTP GET request to a method.
-    @GetMapping("/api/public/categories")
-    public List<Category> getAllCategories() {
-        return categoryService.getAllCategories();
+    //@GetMapping("/public/categories")
+    @RequestMapping(value = "/public/categories",method = RequestMethod.GET)
+    //Use case of request mapping in method level
+    //GetMapping and RequestMapping are both ways to do same thing
+    public ResponseEntity<List<Category>> getAllCategories() {
+        List<Category> allCategories = categoryService.getAllCategories();
+        return new ResponseEntity<>(allCategories,HttpStatus.OK);
     }
     // endpoints
-    @PostMapping("/api/public/categories")
+    @PostMapping("/public/categories")
     //In most modern REST APIs, clients send JSON, so @RequestBody is almost always required for POST and PUT requests.
     //Spring must convert this JSON → Java object --->  That is what @RequestBody does.
-    public String createCategory(@RequestBody Category category)
+    public ResponseEntity<String> createCategory(@RequestBody Category category)
     {
         categoryService.createCategory(category);
-        return "Added Successfully";
+        return new ResponseEntity<>("Added Successfully",HttpStatus.CREATED);
     }
 
     //Response Entity---control the entire HTTP response.
-    @DeleteMapping("/api/admin/categories/{categoryId}")
+    @DeleteMapping("/admin/categories/{categoryId}")
+                                       //PathVariable -- Read values form URL
     public ResponseEntity<@Nullable String> deleteCategory(@PathVariable Long categoryId)
     {
         try {
@@ -59,5 +66,16 @@ public class CategoryController {
             return new ResponseEntity<>(e.getReason(),e.getStatusCode());
         }
     }
-
+    //update
+    @PutMapping("/public/categories/{categoryId}")
+    public ResponseEntity<String> updateCategory(@RequestBody Category category,@PathVariable Long categoryId)
+    {
+        try{
+            Category savedCategory = categoryService.updateCategory(category,categoryId);
+            return new ResponseEntity<>("Category with Category Id :"+ categoryId, HttpStatus.OK);
+        }catch (ResponseStatusException e)
+        {
+            return new ResponseEntity<>(e.getReason(),e.getStatusCode());
+        }
+    }
 }
