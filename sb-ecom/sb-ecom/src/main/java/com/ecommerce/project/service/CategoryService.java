@@ -5,7 +5,7 @@ import com.ecommerce.project.payload.CategoryResponse;
 
 //Promote LooseCoupling and modularity
 public interface CategoryService {
-    CategoryResponse getAllCategories();
+    CategoryResponse getAllCategories(Integer pageNumber ,Integer pageSize, String sortBy,String sortOrder);
 
     CategoryDTO createCategory(CategoryDTO categoryDTO);
 
