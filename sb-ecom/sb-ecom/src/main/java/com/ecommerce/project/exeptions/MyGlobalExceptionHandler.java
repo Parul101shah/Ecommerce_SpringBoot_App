@@ -1,5 +1,6 @@
 package com.ecommerce.project.exeptions;
 
+import com.ecommerce.project.payload.APIResponse;
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,19 +28,19 @@ public class MyGlobalExceptionHandler {
         return new ResponseEntity<Map<String,String>>(response, HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String>myResourceNotFoundException(ResourceNotFoundException e)
-    {
+    public ResponseEntity<APIResponse>myResourceNotFoundException(ResourceNotFoundException e) {
         String message=e.getMessage();
-        return new ResponseEntity<>(message,HttpStatus.NOT_FOUND);
+        APIResponse apiResponse=new APIResponse(message,false);
+        return new ResponseEntity<>(apiResponse,HttpStatus.NOT_FOUND);
     }
 
     //No duplicate category -> unique
     //if update category ->that already exists..
     @ExceptionHandler(APIExceptions.class)
-    public ResponseEntity<String>myAPIExceptions(APIExceptions e)
-    {
+    public ResponseEntity<APIResponse>myAPIExceptions(APIExceptions e) {
         String message=e.getMessage();
-        return new ResponseEntity<>(message,HttpStatus.BAD_REQUEST);
+        APIResponse apiResponse=new APIResponse(message,false);
+        return new ResponseEntity<>(apiResponse,HttpStatus.BAD_REQUEST);
     }
 }
 
