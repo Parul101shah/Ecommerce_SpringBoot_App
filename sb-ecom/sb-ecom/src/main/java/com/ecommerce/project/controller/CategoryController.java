@@ -43,7 +43,7 @@ public class CategoryController {
     //Use case of request mapping in method level
     //GetMapping and RequestMapping are both ways to do same thing
     public ResponseEntity<CategoryResponse> getAllCategories(@RequestParam(name="pageNumber",defaultValue = AppConstants.PAGE_NUMBER ,required = false) Integer pageNumber,
-                                                             @RequestParam(name="pageSize",defaultValue = AppConstants.PAGE_SIZE ,required = false) Integer pageSize ,
+                                                             @RequestParam(name="pageS  ize",defaultValue = AppConstants.PAGE_SIZE ,required = false) Integer pageSize ,
                                                              @RequestParam(name="sortBy",defaultValue = AppConstants.SORT_CATEGORIES_BY ,required = false) String sortBy,
                                                              @RequestParam(name="sortOrder",defaultValue = AppConstants.SORT_DIR ,required = false) String sortOrder) {
         CategoryResponse categoryResponse = categoryService.getAllCategories(pageNumber,pageSize,sortBy,sortOrder);
