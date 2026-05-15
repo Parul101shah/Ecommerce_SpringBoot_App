@@ -1,28 +1,33 @@
 package com.ecommerce.project.model;
-import com.ecommerce.project.payload.CategoryDTO;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-@Entity (name="categories")
-public class Category extends CategoryDTO {
+
+import java.util.List;
+
+@Entity(name = "categories")
+
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoryId;
+
     @NotBlank
-    @Size(min = 5,message = "Category must contain at least 5 characters")
+    @Size(min = 5, message = "Category name must contain atleast 5 characters")
     private String categoryName;
 
-    public Category(Long categoryId, String categoryName) {
-        this.categoryId = categoryId;
-        this.categoryName = categoryName;
-    }
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    private List<Product> products;
 
     public Category() {
+    }
 
+    public Category(Long categoryId, String categoryName, List<Product> products) {
+        this.categoryId = categoryId;
+        this.categoryName = categoryName;
+        this.products = products;
     }
 
     public Long getCategoryId() {
@@ -39,5 +44,22 @@ public class Category extends CategoryDTO {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "categoryId=" + categoryId +
+                ", categoryName='" + categoryName + '\'' +
+                ", products=" + products +
+                '}';
     }
 }
