@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 @Entity
+@Table(name = "products")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,6 +28,10 @@ public class Product {
     @ManyToOne
     @JoinColumn(name="category_id")
     private Category category;
+
+    @ManyToOne
+    @JoinColumn(name = "seller_id")
+    private User user;
 
    //-----------------------------------------------------------
     public Product() {
@@ -119,15 +124,16 @@ public class Product {
     @Override
     public String toString() {
         return "Product{" +
-                "category=" + category +
-                ", productId=" + productId +
+                "productId=" + productId +
                 ", productName='" + productName + '\'' +
-                ", description='" + description + '\'' +
                 ", image='" + image + '\'' +
+                ", description='" + description + '\'' +
                 ", quantity=" + quantity +
                 ", price=" + price +
                 ", discount=" + discount +
                 ", specialPrice=" + specialPrice +
+                ", category=" + category +
+                ", user=" + user +
                 '}';
     }
 }
