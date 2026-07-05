@@ -3,12 +3,14 @@ package com.ecommerce.project.security.jwt;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.WebUtils;
 
 import javax.crypto.SecretKey;
 import java.security.Key;
@@ -24,13 +26,30 @@ public class JwtUtils {
     @Value("${spring.app.jwtExpirationMs}")
     private int jwtExpirationMs;
 
-    public String getJwtFromHeader(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        logger.debug("Authorization Header: {}", bearerToken);
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7); // Remove Bearer prefix
+    @Value("${spring.ecom.app.jwtCookieName}")
+    private String jwtCookie;
+ /*
+ * GET /api/products HTTP/1.1
+   Host: localhost:8080
+   Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...
+ * */
+
+//    public String getJwtFromHeader(HttpServletRequest request) {
+//        String bearerToken = request.getHeader("Authorization");
+//        logger.debug("Authorization Header: {}", bearerToken);
+//        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+//            return bearerToken.substring(7); // Remove Bearer prefix
+//        }
+//        return null;
+//    }
+
+    public String getJwtFromCookie(HttpServletRequest request) {
+        Cookie cookie = WebUtils.getCookie(request, jwtCookie);
+        if(cookie != null){
+            return cookie.getValue();
+        }else {
+            return null;
         }
-        return null;
     }
 
     public String generateTokenFromUsername(UserDetails userDetails) {
