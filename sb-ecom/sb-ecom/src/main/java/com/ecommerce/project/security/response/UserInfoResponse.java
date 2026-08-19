@@ -4,15 +4,15 @@ import java.util.List;
 
 public class UserInfoResponse {
     private Long id;
-    //private String jwtToken;
+    private String jwtToken;
     private String username;
     private List<String> roles;
-    //Json response in sign in endpoint in Aunthentication
+
     public UserInfoResponse(Long id, String username, List<String> roles, String jwtToken) {
         this.id = id;
         this.username = username;
         this.roles = roles;
-
+        this.jwtToken = jwtToken;
     }
 
     public UserInfoResponse(Long id, String username, List<String> roles) {
@@ -24,9 +24,14 @@ public class UserInfoResponse {
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
+    }
+    public String getJwtToken() {
+        return jwtToken;
+    }
+    public void setJwtToken(String jwtToken) {
+        this.jwtToken = jwtToken;
     }
 
     public String getUsername() {
@@ -45,5 +50,4 @@ public class UserInfoResponse {
         this.roles = roles;
     }
 }
-
 
