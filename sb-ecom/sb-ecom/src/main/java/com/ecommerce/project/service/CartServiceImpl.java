@@ -11,11 +11,13 @@ import com.ecommerce.project.repositories.CartItemRepository;
 import com.ecommerce.project.repositories.CartRepository;
 import com.ecommerce.project.repositories.ProductRepository;
 import com.ecommerce.project.util.AuthUtil;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -125,8 +127,73 @@ public class CartServiceImpl implements CartService{
     }
 
     @Override
-    public CartDTO updateProductQuantityInCart(Long productId, int delete) {
-        return null;
+    @Transactional //Spring AOP -> rollback if any issue occurs in b/w -> sensitive update ( debit & update)
+    public CartDTO updateProductQuantityInCart(Long productId, int quantity) {
+        String emailId=authUtil.loggedInEmail();
+        Cart usercart=cartRepository.findCartByEmail(emailId);
+        Long cartId=usercart.getCartId();
+        Cart cart=cartRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cart", "cartId", cartId));
+        Product product=productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+
+        if (product.getQuantity() == 0) {
+            throw new APIExceptions(product.getProductName() + " is not available");
+        }
+        if (product.getQuantity() < quantity) {
+            throw new APIExceptions("Please, make an order of the " + product.getProductName()
+                    + " less than or equal to the quantity " + product.getQuantity() + ".");
+        }
+
+        CartItem cartItem=cartItemRepository.findCartItemByProductIdAndCartId(cartId,productId);
+        if(cartItem==null){
+            throw new APIExceptions("Product"+product.getProductName()+" is not available in the cart");
+        }
+
+        //validation for -ve quantity
+        int newQuantity=product.getQuantity()+quantity;
+        if(newQuantity <0)
+            throw new APIExceptions("The quantity cannot be less than 0");
+        // If 0 delete from cart
+        if(newQuantity ==0)
+        {
+            deleteProductFromCart(productId,cartId);
+        }
+        else {
+            cartItem.setProductPrice(product.getSpecialPrice());
+            cartItem.setQuantity(cartItem.getQuantity() + quantity);
+            cartItem.setDiscount(product.getDiscount());
+            cart.setTotalprice(cart.getTotalprice() + (cartItem.getProductPrice() * quantity));
+            cartRepository.save(cart);
+        }
+
+        CartItem updatedCartItem=cartItemRepository.save(cartItem);
+        if(updatedCartItem.getQuantity() ==0){
+            cartItemRepository.deleteById(updatedCartItem.getCartItemId());
+        }
+
+        CartDTO cartDTO = modelMapper.map(cart, CartDTO.class);
+        List<CartItem> cartItems = cart.getCartItems();
+        Stream<ProductDTO> productstream= cartItems.stream().map(item->{
+            ProductDTO map = modelMapper.map(item.getProduct(), ProductDTO.class);
+            map.setQuantity(item.getQuantity());
+            return map;
+        });
+        cartDTO.setProducts(productstream.toList());
+        return cartDTO;
+    }
+    @Transactional
+    @Override
+    public String deleteProductFromCart(Long cartId, Long productId) {
+        Cart cart=cartRepository.findById(cartId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cart", "cartId", cartId));
+        CartItem cartItem=cartItemRepository.findCartItemByProductIdAndCartId(cartId,productId);
+        if(cartItem==null){
+            throw new ResourceNotFoundException("Product","productId", productId);
+        }
+        cart.setTotalprice(cart.getTotalprice() - (cartItem.getProductPrice() * cartItem.getQuantity()));
+        cartItemRepository.deleteCartItemByProductIdAndCartId(cartId,productId);
+        return "";
     }
 
     private Cart createCart() {

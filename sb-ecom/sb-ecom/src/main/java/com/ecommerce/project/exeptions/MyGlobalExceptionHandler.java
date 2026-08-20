@@ -42,5 +42,12 @@ public class  MyGlobalExceptionHandler {
         APIResponse apiResponse=new APIResponse(message,false);
         return new ResponseEntity<>(apiResponse,HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler
+    public ResponseEntity<String>LogicException(LogicException e) {
+        return new ResponseEntity<>(
+                "Category size less than 5" + e.getMessage(),
+                HttpStatus.BAD_REQUEST
+        );
+    }
 }
 
