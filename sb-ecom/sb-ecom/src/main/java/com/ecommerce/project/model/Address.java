@@ -3,13 +3,17 @@ package com.ecommerce.project.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "addresses")
-
+@Data
+@NoArgsConstructor
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +28,7 @@ public class Address {
     private String buildingName;
 
     @NotBlank
-    @Size(min = 4, message = "City name must be atleast 4 characters")
+    @Size(min = 1, message = "City name must be atleast 4 characters")
     private String city;
 
     @NotBlank
@@ -39,9 +43,10 @@ public class Address {
     @Size(min = 6, message = "Pincode must be atleast 6 characters")
     private String pincode;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @ManyToMany(mappedBy = "addresses")
-    private List<User> users = new ArrayList<>();
     //custom cons
     public Address(String street, String buildingName, String city, String state, String country, String pincode) {
         this.street = street;
@@ -52,94 +57,4 @@ public class Address {
         this.pincode = pincode;
     }
 
-    public Address() {
-    }
-
-    public Address(Long addressId, String street, String buildingName, String city, String state, String country, String pincode, List<User> users) {
-        this.addressId = addressId;
-        this.street = street;
-        this.buildingName = buildingName;
-        this.city = city;
-        this.state = state;
-        this.country = country;
-        this.pincode = pincode;
-        this.users = users;
-    }
-
-    public Long getAddressId() {
-        return addressId;
-    }
-
-    public void setAddressId(Long addressId) {
-        this.addressId = addressId;
-    }
-
-    public String getStreet() {
-        return street;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public String getBuildingName() {
-        return buildingName;
-    }
-
-    public void setBuildingName(String buildingName) {
-        this.buildingName = buildingName;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getPincode() {
-        return pincode;
-    }
-
-    public void setPincode(String pincode) {
-        this.pincode = pincode;
-    }
-
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
-
-    @Override
-    public String toString() {
-        return "Address{" +
-                "pincode='" + pincode + '\'' +
-                ", country='" + country + '\'' +
-                ", state='" + state + '\'' +
-                ", city='" + city + '\'' +
-                ", buildingName='" + buildingName + '\'' +
-                ", street='" + street + '\'' +
-                ", addressId=" + addressId +
-                '}';
-    }
 }
