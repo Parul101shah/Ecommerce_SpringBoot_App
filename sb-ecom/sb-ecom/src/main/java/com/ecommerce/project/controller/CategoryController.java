@@ -50,6 +50,12 @@ public class CategoryController {
         CategoryResponse categoryResponse = categoryService.getAllCategories(pageNumber,pageSize,sortBy,sortOrder);
         return new ResponseEntity<>(categoryResponse,HttpStatus.OK);
     }
+    @GetMapping("/public/categories/{categoryId}")
+    public ResponseEntity<CategoryDTO> getCategoryById(
+            @PathVariable Long categoryId) {
+        CategoryDTO categoryDTO = categoryService.getCategoryById(categoryId);
+        return new ResponseEntity<>(categoryDTO, HttpStatus.OK);
+    }
     // endpoints
     @PostMapping("/public/categories")
     //In most modern REST APIs, clients send JSON, so @RequestBody is almost always required for POST and PUT requests.

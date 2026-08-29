@@ -1,5 +1,6 @@
 package com.ecommerce.project.payload;
 
+import com.ecommerce.project.model.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,7 @@ public class OrderDTO {
     private LocalDate orderDate;
     private PaymentDTO payment;
     private Double totalAmount;
-    private String orderStatus;
+    private OrderStatus orderStatus;
     private Long addressId;
 }
 

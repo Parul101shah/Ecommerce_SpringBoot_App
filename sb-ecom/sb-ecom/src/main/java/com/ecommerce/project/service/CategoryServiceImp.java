@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -87,6 +88,19 @@ public class CategoryServiceImp implements CategoryService{
         savedCategory=categoryRepository.save(category);
         return modelMapper.map(savedCategory,CategoryDTO.class);
     }
-}
+
+    @Override
+    public CategoryDTO getCategoryById(Long categoryId) {
+        Optional<Category> category = categoryRepository.findById(categoryId);
+
+        if (category.isEmpty()) {
+            throw new ResourceNotFoundException(
+                    "Category",
+                    "categoryId",
+                    String.valueOf(categoryId)
+            );
+        }
+        return modelMapper.map(category.get(), CategoryDTO.class);
+    }}
 
 
