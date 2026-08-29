@@ -21,7 +21,7 @@ public class Order {
     private Long orderId;
 
     @Email
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String email;
 
     @OneToMany(mappedBy = "order", cascade = {CascadeType.PERSIST,CascadeType.MERGE})
@@ -33,9 +33,11 @@ public class Order {
 
     private LocalDate orderDate;
     private Double totalAmount;
-    private String orderStatus;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;
     //multiple orders in same address
     @ManyToOne
     @JoinColumn(name = "address_id")
     private Address address;
+
 }

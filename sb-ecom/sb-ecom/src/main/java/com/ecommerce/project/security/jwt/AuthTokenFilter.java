@@ -27,29 +27,76 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
 
+
+//    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+//            throws ServletException, IOException {
+//        logger.debug("AuthTokenFilter called for URI: {}", request.getRequestURI());
+//        try {
+//            String jwt = parseJwt(request);
+//            if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
+//                String username = jwtUtils.getUserNameFromJwtToken(jwt);
+//
+//                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+//
+//                UsernamePasswordAuthenticationToken authentication =
+//                        new UsernamePasswordAuthenticationToken(userDetails,
+//                                null,
+//                                userDetails.getAuthorities());
+//                logger.debug("Roles from JWT: {}", userDetails.getAuthorities());
+//
+//                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+//
+//                SecurityContextHolder.getContext().setAuthentication(authentication);
+//            }
+//        } catch (Exception e) {
+//            logger.error("Cannot set user authentication: {}", e);
+//        }
+//
+//        filterChain.doFilter(request, response);
+//    }
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain)
             throws ServletException, IOException {
+
         logger.debug("AuthTokenFilter called for URI: {}", request.getRequestURI());
+
         try {
             String jwt = parseJwt(request);
+
+            System.out.println("JWT FROM COOKIE = " + jwt);
+
             if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
+
+                System.out.println("JWT IS VALID");
+
                 String username = jwtUtils.getUserNameFromJwtToken(jwt);
 
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                System.out.println("USERNAME FROM JWT = " + username);
+
+                UserDetails userDetails =
+                        userDetailsService.loadUserByUsername(username);
+
+                System.out.println("AUTHORITIES = " + userDetails.getAuthorities());
 
                 UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(userDetails,
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails,
                                 null,
-                                userDetails.getAuthorities());
-                logger.debug("Roles from JWT: {}", userDetails.getAuthorities());
-
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                                userDetails.getAuthorities()
+                        );
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                System.out.println("AUTHENTICATION SET = "
+                        + SecurityContextHolder.getContext().getAuthentication());
             }
+
         } catch (Exception e) {
-            logger.error("Cannot set user authentication: {}", e);
+            logger.error("Cannot set user authentication: {}", e.getMessage());
+            e.printStackTrace();
         }
 
         filterChain.doFilter(request, response);
