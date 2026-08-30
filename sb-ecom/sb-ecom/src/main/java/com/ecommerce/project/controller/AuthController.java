@@ -11,6 +11,7 @@ import com.ecommerce.project.security.request.LoginRequest;
 import com.ecommerce.project.security.request.SignupRequest;
 import com.ecommerce.project.security.response.MessageResponse;
 import com.ecommerce.project.security.response.UserInfoResponse;
+import com.ecommerce.project.service.EmailService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -45,6 +46,9 @@ public class AuthController {
 
     @Autowired
     RoleRepository roleRepository;
+
+    @Autowired
+    private EmailService emailService;
 
 
     @PostMapping("/signin")
@@ -124,6 +128,9 @@ public class AuthController {
 
         user.setRoles(roles);
         userRepository.save(user);
+
+        //Send Welcome email
+        emailService.sendWelcomeEmail(signUpRequest.getEmail() ,signUpRequest.getUsername());
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }

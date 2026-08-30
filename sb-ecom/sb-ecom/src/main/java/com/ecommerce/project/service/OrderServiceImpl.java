@@ -39,6 +39,9 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     @Override
     @Transactional
     public OrderDTO placeOrder(String emailId, Long addressId, String paymentMethod, String pgName, String pgPaymentId, String pgStatus, String pgResponseMessage) {
@@ -116,6 +119,9 @@ public class OrderServiceImpl implements OrderService {
 
         orderDTO.setAddressId(addressId);
 
+        // send order confirmation email.
+        emailService.sendOrderConfirmation(emailId,savedOrder.getOrderId(), savedOrder.getTotalAmount());
+
         return orderDTO;
     }
 
@@ -140,6 +146,10 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new ResourceNotFoundException("Order","orderId", orderId));
         order.setOrderStatus(orderStatus);
         Order saved=orderRepository.save(order);
+
+        //send status update email
+        emailService.sendOrderStatusUpdate(order.getEmail(),orderId, orderStatus.name());
+
         return modelMapper.map(saved, OrderDTO.class);
     }
 }
