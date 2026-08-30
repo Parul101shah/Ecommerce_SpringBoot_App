@@ -2,10 +2,13 @@ package com.ecommerce.project.payload;
 
 import com.ecommerce.project.payload.ProductDTO;
 
+import java.io.Serializable;
 import java.util.List;
 
 
-public class ProductResponse {
+public class ProductResponse implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private List<ProductDTO> content;
     private Integer pageNumber;
     private Integer pageSize;
