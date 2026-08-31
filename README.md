@@ -438,6 +438,7 @@ User → EC2 (Docker: Spring Boot: Redis ) → RDS PostgreSQL
 # On EC2 instance
 docker-compose -f docker-compose.aws.yml up --build -d
 ```
+<img src="https://img.shields.io/badge/Spring%20Boot-3.2.5-6DB33F
 
 ---
 
