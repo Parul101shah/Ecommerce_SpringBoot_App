@@ -30,8 +30,8 @@ Every step above is a working API endpoint, secured, validated, and tested.
 ## ⚡ Quick Start (2 minutes)
 
 ```bash
-git clone https://github.com/your-username/ecom-store.git
-cd ecom-store/Ecommerce_SpringBoot_App/sb-ecom/sb-ecom
+git clone https://github.com/Parul101shah/Ecommerce_SpringBoot_App.git
+cd Ecommerce_SpringBoot_App/sb-ecom/sb-ecom
 
 # Start PostgreSQL + Redis in Docker
 docker-compose up postgres redis -d
