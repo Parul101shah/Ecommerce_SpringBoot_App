@@ -62,3 +62,49 @@ Docker Compose manages the containers running on the EC2 instance.
 
 ```bash
 docker compose -f docker-compose.aws.yml up --build -d
+```
+
+### 🔄 Flyway Database Migrations
+
+Flyway manages the database schema using version-controlled migrations.
+
+The deployed database contains the following successfully applied migrations:
+
+<p align="center">
+  <img src="Flyway_Database_Migration.png" alt="Flyway database migration history" width="900">
+</p>
+
+All migrations completed successfully.
+
+## 🔴 Redis Cache
+
+Redis 7 is running as a Docker container on the EC2 instance and is used as the application's caching layer.
+
+<p align="center">
+  <img src="Postgres_redis_containerized.png" alt="Redis Docker container running" width="900">
+</p>
+
+---
+
+## 🔒 AWS Network Security
+
+The AWS deployment uses Security Groups to control communication between EC2 and RDS.
+
+```text
+                         Internet
+                            │
+                            │ HTTP :8080
+                            ▼
+                    ┌─────────────────┐
+                    │      EC2        │
+                    │                 │
+                    │ Spring Boot App │
+                    │     Redis 7     │
+                    └────────┬────────┘
+                             │
+                             │ PostgreSQL :5432
+                             ▼
+                    ┌─────────────────┐
+                    │      RDS        │
+                    │  PostgreSQL 16  │
+                    └─────────────────┘
