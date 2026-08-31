@@ -1,0 +1,27 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: ecom-redis
+    ports:
+      - "6379:6379"
+
+  app:
+    build: .
+    container_name: ecom-app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: aws
+
+      RDS_HOSTNAME: ecomstore.cl4migs4ie2k.ap-south-1.rds.amazonaws.com
+      RDS_PORT: 5432
+      RDS_DB_NAME: ecommerce_db
+      RDS_USERNAME: postgres
+      RDS_PASSWORD: ${RDS_PASSWORD}
+
+      REDIS_HOST: redis
+      JWT_SECRET: ${JWT_SECRET}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+
+    depends_on:
+      - redis
