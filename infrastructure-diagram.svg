@@ -1,0 +1,35 @@
+<svg width="680" height="380" viewBox="0 0 680 380" xmlns="http://www.w3.org/2000/svg">
+<rect width="680" height="380" fill="#14141a"/>
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="#B5D4F4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+
+<rect x="40" y="40" width="320" height="220" rx="20" fill="#042C53" stroke="#378ADD" stroke-width="1"/>
+<text x="66" y="70" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#E6F1FB">EC2 instance</text>
+<text x="66" y="88" font-family="Arial, sans-serif" font-size="12" fill="#85B7EB">Amazon Linux 2023, t2.micro</text>
+
+<rect x="66" y="100" width="268" height="140" rx="12" fill="#26215C" stroke="#7F77DD" stroke-width="1"/>
+<text x="200" y="126" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#EEEDFE">Docker</text>
+
+<rect x="86" y="145" width="110" height="70" rx="10" fill="#04342C" stroke="#1D9E75" stroke-width="1"/>
+<text x="141" y="174" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#E1F5EE">Spring Boot</text>
+<text x="141" y="192" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9FE1CB">app container</text>
+
+<rect x="204" y="145" width="110" height="70" rx="10" fill="#4A1B0C" stroke="#D85A30" stroke-width="1"/>
+<text x="259" y="174" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#FAECE7">Redis 7</text>
+<text x="259" y="192" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#F0997B">cache container</text>
+
+<line x1="360" y1="150" x2="435" y2="150" stroke="#B5D4F4" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="365" y="140" font-family="Arial, sans-serif" font-size="11" fill="#C2C0B6">Port 5432</text>
+<text x="365" y="178" font-family="Arial, sans-serif" font-size="11" fill="#C2C0B6">Security group:</text>
+<text x="365" y="194" font-family="Arial, sans-serif" font-size="11" fill="#C2C0B6">EC2 SG only</text>
+
+<rect x="440" y="80" width="200" height="140" rx="16" fill="#173404" stroke="#639922" stroke-width="1"/>
+<text x="540" y="126" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#EAF3DE">RDS PostgreSQL</text>
+<text x="540" y="146" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#C0DD97">ap-south-1 (Mumbai)</text>
+<text x="540" y="166" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#C0DD97">Flyway-managed schema</text>
+
+<text x="340" y="300" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#9c9a92">Inbound rule on RDS security group: allow 5432 only from EC2's security group ID</text>
+</svg>
