@@ -454,7 +454,7 @@ docker compose -f docker-compose.aws.yml up --build -d
 
 The complete AWS deployment process and verification evidence are documented separately.
 
-👉 **[View AWS Deployment Proof](docs/Deployment.md)**
+👉 **[View AWS Deployment Proof](sb-ecom/sb-ecom/docs/Deployment.md)**
 
 The deployment proof includes:
 
