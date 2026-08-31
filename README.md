@@ -86,7 +86,7 @@ docker-compose up postgres redis -d
 ├──────────────────────┬─────────────────────────────────┤
 │                      │                                 │
 │    ┌─────────────────▼──────────┐  ┌────────────────┐  │
-│    │   🐘 PostgreSQ  16         │ │  🔴 Redis 7    │  │
+│    │   🐘 PostgreSQL 16         │ │  🔴 Redis 7    │  │
 │    │   (Flyway-managed schema)  │  │  (Cache layer) │  │
 │    └────────────────────────────┘  └────────────────┘  │
 └────────────────────────────────────────────────────────┘
@@ -97,7 +97,7 @@ docker-compose up postgres redis -d
 ## ✨ Features
 
 ### 🔐 Authentication & Security
-- **JWT via HTTP-only cookies** — no token in localStorage, XSS-safe
+- **JWT via HTTP-only cookies** — prevents JavaScript from directly accessing the token, reducing XSS-based token theft
 - **3 roles**: `USER`, `SELLER`, `ADMIN` with method-level authorization
 - **BCrypt** password hashing
 - Auto-seeded roles & default users on first startup
@@ -414,14 +414,12 @@ src/main/java/com/ecommerce/project/
 
 ### Target Architecture
 
-```
-User → EC2 (Docker: Spring Boot: Redis ) → RDS PostgreSQL
+
+<img src="infrastructure-diagram.svg">
 
 ```
-
-
-
-
+User → EC2 (Docker: Spring Boot + Redis) → RDS PostgreSQL
+```
 
 | Component | Setup |
 |---|---|
@@ -432,15 +430,13 @@ User → EC2 (Docker: Spring Boot: Redis ) → RDS PostgreSQL
 | Schema migrations | Flyway (versioned, auto-applied on startup) |
 | Networking | Security groups — RDS accepts inbound `5432` only from EC2's specific security group |
 
+
 ### Deploy
 
 ```bash
 # On EC2 instance
 docker-compose -f docker-compose.aws.yml up --build -d
 ```
-<img src="https://img.shields.io/badge/Spring%20Boot-3.2.5-6DB33F
-
----
 
 ## 🛠️ Tech Decisions & Why
 
