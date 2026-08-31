@@ -450,6 +450,23 @@ User → EC2 (Docker: Spring Boot + Redis) → RDS PostgreSQL
 # On EC2 instance
 docker compose -f docker-compose.aws.yml up --build -d
 ```
+### 📸 Deployment Proof
+
+The complete AWS deployment process and verification evidence are documented separately.
+
+👉 **[View AWS Deployment Proof](docs/Deployment.md)**
+
+The deployment proof includes:
+
+- ☁️ AWS EC2 infrastructure
+- 🗄️ Amazon RDS PostgreSQL
+- 🔐 EC2 SSH connection
+- 🐳 Docker & Redis containers
+- 📖 Deployed Swagger API
+- 🧪 Postman API verification
+- 🔄 Flyway database migrations
+- ✅ Final deployment verification
+  
 
 ## 🛠️ Tech Decisions & Why
 
