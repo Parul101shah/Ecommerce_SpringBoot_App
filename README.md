@@ -148,6 +148,17 @@ All emails run on background threads (`@Async`) — they never slow down API res
 - Structured error responses with proper HTTP status codes
 - Custom exceptions: `ResourceNotFoundException`, `APIExceptions`, `LogicException`
 
+### 🔒 Security
+- Stateless JWT authentication — no server-side HTTP sessions
+- HTTP-only JWT cookies — prevents JavaScript from directly accessing the token, reducing XSS-based token theft
+- BCrypt password hashing — passwords are never stored as plain text
+- Role-based access control (RBAC) — USER, SELLER, and ADMIN
+- Method-level authorization — sensitive operations are protected based on user roles
+- JWT authentication filter — extracts, validates, and authenticates JWTs on incoming requests
+- Protected admin endpoints — administrative operations require appropriate authorization
+- Environment-based secrets — database credentials, JWT secrets, and other sensitive configuration are supplied through environment variables
+- CSRF considerations — cookie-based authentication is configured with browser-based request security in mind
+
 ---
 
 ## 🔌 API Reference
@@ -296,13 +307,13 @@ Stage 1 (Build)                    Stage 2 (Run)
 
 ```bash
 # One-time: create secrets file
-echo "DB_PASSWORD=#Pubg8080" > .env
+echo "DB_PASSWORD=**********" > .env
 
 # Build & launch all 3 containers
-docker-compose up --build
+docker compose up --build
 
 # Or run in background
-docker-compose up --build -d
+docker compose up --build -d
 ```
 
 ### Run Only DB + Redis (⭐ Best for Development)
@@ -315,11 +326,11 @@ docker-compose up postgres redis -d
 ### Docker Commands Cheat Sheet
 
 ```bash
-docker-compose ps                    # Check status
-docker-compose logs -f app           # Stream app logs
-docker-compose down                  # Stop everything
-docker-compose down -v               # Stop + delete DB data
-docker-compose up --build -d app     # Rebuild & restart app only
+docker compose ps                    # Check status
+docker compose logs -f app           # Stream app logs
+docker compose down                  # Stop everything
+docker compose down -v               # Stop + delete DB data
+docker compose up --build -d app     # Rebuild & restart app only
 docker exec -it ecom-postgres psql -U postgres -d ecommerce_db  # DB shell
 ```
 
@@ -415,7 +426,9 @@ src/main/java/com/ecommerce/project/
 ### Target Architecture
 
 
-<img src="infrastructure-diagram.svg">
+<p align="center">
+  <img src="infrastructure-diagram.svg" alt="EcomStore AWS Infrastructure Architecture" width="900">
+</p>
 
 ```
 User → EC2 (Docker: Spring Boot + Redis) → RDS PostgreSQL
@@ -435,15 +448,15 @@ User → EC2 (Docker: Spring Boot + Redis) → RDS PostgreSQL
 
 ```bash
 # On EC2 instance
-docker-compose -f docker-compose.aws.yml up --build -d
+docker compose -f docker-compose.aws.yml up --build -d
 ```
 
 ## 🛠️ Tech Decisions & Why
 
 | Decision | Why |
 |----------|-----|
-| **JWT in cookies** (not headers) | Immune to XSS; browser manages token automatically |
-| **Redis caching** | Product listings are read-heavy; cache reduces DB load by ~90% |
+| **JWT in cookies** (not headers) | Prevents JavaScript from directly accessing the token, reducing XSS-based token theft | 
+| **Redis caching** | Product listings are read-heavy; caching reduces repeated database queries and improves response time|
 | **Flyway** (not `ddl-auto=update`) | Version-controlled, reproducible, safe for production |
 | **Optimistic locking** on products | Prevents overselling during concurrent purchases |
 | **Async emails** (`@Async`) | Email SMTP calls take 1-3s; async prevents blocking API response |
